@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@my-canvas-app/server",
   "version": "0.1.0",
   "bin": {
     "server": "bin/server.js"
