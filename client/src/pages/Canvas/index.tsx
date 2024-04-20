@@ -1,6 +1,6 @@
-import { AppBar, Button, Toolbar } from "@mui/material"
 import { CSSProperties } from "react"
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels"
+import { CanvasMenu } from "../../components/CanvasMenu"
 
 const HorizontalCenteringStyle: CSSProperties = {
   display: "flex",
@@ -28,16 +28,9 @@ const PanelResizeHandleStyle: CSSProperties = {
 }
 
 export const Canvas = () => {
+
   return <>
-    <AppBar position="static">
-      <Toolbar>
-        {["Files", "Share"].map((text) =>
-          <Button key={text} sx={{ my: 2, color: "white", display: "block" }}>
-            {text}
-          </Button>
-        )}
-      </Toolbar>
-    </AppBar>
+    <CanvasMenu />
     <PanelGroup direction="horizontal" style={{ minHeight: "100vh", backgroundColor: "silver" }}>
       <Panel defaultSize={30} minSize={20} style={{ ...PanelStyle }}>left</Panel>
       <PanelResizeHandle style={{ ...PanelResizeHandleStyle }} />
