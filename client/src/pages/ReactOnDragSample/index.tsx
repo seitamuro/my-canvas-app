@@ -50,7 +50,6 @@ type DraggableItemProps = {
 const DraggableItem: React.FC<DraggableItemProps> = ({ id, content }) => {
   const { setDraggedData } = useDnDContext()
   const onDragStartHandler = (e: React.DragEvent) => {
-    console.log("onDragStartHandler", e)
     setDraggedData({ id, content })
   }
   return <div
@@ -62,16 +61,25 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ id, content }) => {
   </div>
 }
 
-interface DraggableItemContainerProps {
+interface DropZoneProps {
   id: string,
   initialItems?: DroppableItem[]
+  style?: React.CSSProperties
 }
 
-const DraggableItemContainer: React.FC<DraggableItemContainerProps> = ({ id, initialItems = [] }) => {
+const addInitialItems = (id: string, prev: DropZoneData[], initialItems: DroppableItem[]): DropZoneData[] => {
+  const concatData = [...prev, ...initialItems.map(item => ({ id: id, item: item }))]
+  const uniqueData = Array.from(new Set(concatData.map(data => data.item.id))).map(id => { return concatData.find(data => data.item.id === id) })
+  const newData = uniqueData.filter(data => data !== undefined) as DropZoneData[]
+
+  return newData
+}
+
+const DropZone: React.FC<DropZoneProps> = ({ id, initialItems = [], style = {} }) => {
   const { draggedData, dropZoneData, setDropZoneData } = useDnDContext()
 
   useEffect(() => {
-    setDropZoneData(prev => [...prev, ...initialItems.map(item => ({ id, item: item }))])
+    setDropZoneData(prev => addInitialItems(id, prev, initialItems))
   }, [])
 
   const onDragOverHandler = (e: React.DragEvent) => {
@@ -79,16 +87,13 @@ const DraggableItemContainer: React.FC<DraggableItemContainerProps> = ({ id, ini
   }
 
   const onDropHandler = (e: React.DragEvent) => {
-    console.log("onDropHandler", e)
-    console.log(draggedData)
-    console.log(id)
     if (!draggedData) return
     setDropZoneData(prev => prev.map(dropZoneData => dropZoneData.item.id === draggedData.id ? { id: id, item: draggedData } : dropZoneData))
-    console.log(dropZoneData)
   }
 
   return (
     <div
+      style={style}
       onDragOver={onDragOverHandler}
       onDrop={onDropHandler}
     >
@@ -101,11 +106,24 @@ const DraggableItemContainer: React.FC<DraggableItemContainerProps> = ({ id, ini
 }
 
 export const ReactOnDragSample = () => {
+  const initialItems: DroppableItem[] = [
+    { id: "item-1", content: "Drag me around!" },
+    { id: "item-1", content: "Drag me around!" },
+    { id: "item-1", content: "Drag me around!" },
+    { id: "item-2", content: "Drag me around!" },
+    { id: "item-3", content: "Drag me around!" },
+    { id: "item-3", content: "Drag me around!" },
+    { id: "item-1", content: "Drag me around!" },
+    { id: "item-1", content: "Drag me around!" },
+  ]
+
   return (
     <>
       <DnDProvider>
-        <DraggableItemContainer id="dropzone-1" initialItems={[{ id: "item-1", content: "Drag me around!" }]} />
-        <DraggableItemContainer id="dropzone-2" />
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <DropZone id="dropzone-1" initialItems={initialItems} style={{ width: "50%", minHeight: "100vh", backgroundColor: "silver" }} />
+          <DropZone id="dropzone-2" style={{ width: "50%", minHeight: "100vh", backgroundColor: "silver" }} />
+        </div>
       </DnDProvider>
     </>
   )
