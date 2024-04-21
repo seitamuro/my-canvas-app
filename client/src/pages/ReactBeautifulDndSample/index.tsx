@@ -10,9 +10,14 @@ type CardType = {
 }
 
 const Card: React.FC<CardType> = ({ id, title }: { id: string, title: string }) => {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, data } = useSortable({
     id: id
   })
+
+  if (transform) {
+    console.log("x")
+    transform.x = 100
+  }
 
   const style = {
     margin: "10px",
