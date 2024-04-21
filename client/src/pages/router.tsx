@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Canvas } from "./Canvas";
 import App from "./Home";
+import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 
 export const router = createBrowserRouter([
   {
@@ -8,7 +8,7 @@ export const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/canvas",
-    element: <Canvas />
+    path: "/samples/react-beautiful-dnd",
+    element: <ReactBeautifulDndSample />
   }
 ])
