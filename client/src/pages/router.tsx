@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./Home";
 import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 import { ReactOnDragSample } from "./ReactOnDragSample";
+import { ZodSample } from "./ZodSample";
 
 export const router = createBrowserRouter([
   {
@@ -15,5 +16,9 @@ export const router = createBrowserRouter([
   {
     path: "/samples/react-on-drag",
     element: <ReactOnDragSample />
+  },
+  {
+    path: "/samples/zod",
+    element: <ZodSample />
   }
 ])
