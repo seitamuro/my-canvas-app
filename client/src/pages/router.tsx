@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { SampleCanvas } from "./Canvas";
+import { SampleCanvas } from "./DnDCanvas";
 import App from "./Home";
 import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 import { ReactOnDragSample } from "./ReactOnDragSample";
