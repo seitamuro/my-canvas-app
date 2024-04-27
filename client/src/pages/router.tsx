@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { SampleCanvas } from "./Canvas";
 import App from "./Home";
 import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 import { ReactOnDragSample } from "./ReactOnDragSample";
@@ -20,5 +21,9 @@ export const router = createBrowserRouter([
   {
     path: "/samples/zod",
     element: <ZodSample />
+  },
+  {
+    path: "/samples/canvas",
+    element: <SampleCanvas />
   }
 ])
