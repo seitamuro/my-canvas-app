@@ -1,47 +1,68 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
-type CanvasProps = {
+type ItemProps = {
+  x?: number,
+  y?: number
   children?: React.ReactNode
 }
 
-const Item = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
+  const [prevClientPosition, setPrevClientPosition] = useState({ x, y })
+  const [position, setPosition] = useState({ x, y })
   const [isMove, setIsMove] = useState(false)
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsMove(true)
+    setPrevClientPosition({ x: e.clientX, y: e.clientY })
   }
 
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!isMove) return
+  useEffect(() => {
+    const handleMouseUp = (e: MouseEvent) => {
+      setIsMove(false)
+    }
 
-    setPosition({
-      x: position.x + e.movementX,
-      y: position.y + e.movementY
-    })
-  }
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault()
+      if (!isMove) return
+      const newPosition = {
+        x: position.x + e.clientX - prevClientPosition.x,
+        y: position.y + e.clientY - prevClientPosition.y
+      }
+      setPrevClientPosition({ x: e.clientX, y: e.clientY })
+      setPosition(newPosition)
+    }
 
-  const onMouseUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsMove(false)
-  }
+    const handleMouseLeave = (e: MouseEvent) => {
+      setIsMove(false)
+    }
 
-  const onMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault()
-  }
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener('mouseleave', handleMouseLeave)
 
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [isMove, position])
 
   return <div
     onMouseDown={onMouseDown}
-    onMouseMove={onMouseMove}
-    onMouseUp={onMouseUp}
-    onMouseLeave={onMouseLeave}
     style={{
       position: 'absolute',
       left: position.x,
       top: position.y,
+      backgroundColor: 'lightblue',
+      margin: 0,
+      padding: 0,
     }}>
-    Item
+    {children}
   </div>
+}
+
+type CanvasProps = {
+  children?: React.ReactNode
 }
 
 const Canvas: React.FC<CanvasProps> = ({ children }) => {
@@ -56,7 +77,8 @@ const Canvas: React.FC<CanvasProps> = ({ children }) => {
 export const MouseClickCanvasSample = () => {
   return (
     <Canvas >
-      <Item />
+      <Item x={0}><p>Item1</p></Item>
+      <Item x={100}><p>Item2</p></Item>
     </Canvas>
   )
 }
