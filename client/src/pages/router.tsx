@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { SampleCanvas } from "./DnDCanvas";
 import App from "./Home";
+import { MouseClickCanvasSample } from "./MouseClickCanvas";
 import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 import { ReactOnDragSample } from "./ReactOnDragSample";
 import { ZodSample } from "./ZodSample";
@@ -25,5 +26,9 @@ export const router = createBrowserRouter([
   {
     path: "/samples/canvas",
     element: <SampleCanvas />
+  },
+  {
+    path: "/samples/mouse-click-canvas",
+    element: <MouseClickCanvasSample />
   }
 ])
