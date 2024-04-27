@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react"
 
+const ItemContextMenu: React.FC = () => {
+  return (
+    <div>
+      This is ItemContextMenu.
+    </div>
+  )
+}
+
 type ItemProps = {
   x?: number,
   y?: number
@@ -10,6 +18,7 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
   const [prevClientPosition, setPrevClientPosition] = useState({ x, y })
   const [position, setPosition] = useState({ x, y })
   const [isMove, setIsMove] = useState(false)
+  const [showContextMenu, setShowContextMenu] = useState(false)
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsMove(true)
@@ -50,6 +59,7 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
 
   return <div
     onMouseDown={onMouseDown}
+    onContextMenu={(e) => { e.preventDefault(); setShowContextMenu(true) }}
     style={{
       position: 'absolute',
       left: position.x,
@@ -59,6 +69,7 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
       padding: 0,
     }}>
     {children}
+    {showContextMenu && <ItemContextMenu />}
   </div>
 }
 
