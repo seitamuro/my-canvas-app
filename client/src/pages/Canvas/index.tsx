@@ -16,11 +16,17 @@ const CanvasItem = () => {
   }
 
   return (
-    <div draggable={true} onDragStart={onDragStart} onDragEnd={onDragEnd} style={{
-      position: 'absolute',
-      left: position.x,
-      top: position.y,
-    }}>
+    <div
+      draggable={true}
+      onMouseDown={e => console.log("mouse down:", e)}
+      onMouseUp={e => console.log("mouse up:", e)}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      style={{
+        position: 'absolute',
+        left: position.x,
+        top: position.y,
+      }}>
       <h1>Item</h1>
     </div>
   )
