@@ -45,6 +45,7 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
       document.removeEventListener('mouseup', handleMouseUp)
       document.removeEventListener('mouseleave', handleMouseLeave)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMove, position])
 
   return <div
@@ -72,13 +73,32 @@ const Canvas: React.FC<CanvasProps> = ({ children }) => {
       {children}
     </div>
   )
-
 }
+
+type ItemData = {
+  x: number,
+  y: number,
+  text: string
+}
+
 export const MouseClickCanvasSample = () => {
+  const [itemPosition, setItemPosition] = useState({ x: 0, y: 20 })
+  const [items, setItems] = useState<ItemData[]>([])
+
+  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const item: ItemData = {
+      x: itemPosition.x,
+      y: itemPosition.y + 30,
+      text: `Item${items.length + 1}`
+    }
+    setItemPosition({ x: item.x, y: item.y })
+    setItems(prev => [...prev, item])
+  }
+
   return (
     <Canvas >
-      <Item x={0}><p>Item1</p></Item>
-      <Item x={100}><p>Item2</p></Item>
+      <button onClick={onClick}>Add Item</button>
+      {items.map((item, index) => (<Item key={index} x={item.x} y={item.y}>{item.text}</Item>))}
     </Canvas>
   )
 }
