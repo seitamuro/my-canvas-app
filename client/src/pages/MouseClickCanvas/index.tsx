@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 type ItemContextMenuProps = {
   menuX?: number;
   menuY?: number;
+  children?: React.ReactNode;
 }
 
-const ItemContextMenu: React.FC<ItemContextMenuProps> = ({ menuX = 0, menuY = 0 }) => {
+const ContextMenu: React.FC<ItemContextMenuProps> = ({ menuX = 0, menuY = 0, children }) => {
   return (
     <div style={{
       position: 'absolute',
@@ -13,7 +14,7 @@ const ItemContextMenu: React.FC<ItemContextMenuProps> = ({ menuX = 0, menuY = 0 
       top: menuY,
       backgroundColor: 'lightgreen',
     }}>
-      This is ItemContextMenu.
+      {children}
     </div>
   )
 }
@@ -30,6 +31,7 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
   const [isMove, setIsMove] = useState(false)
   const [showContextMenu, setShowContextMenu] = useState(false)
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
+  const [backgroundColor, setBackgroundColor] = useState('lightblue')
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsMove(true)
@@ -83,13 +85,17 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
         position: 'absolute',
         left: position.x,
         top: position.y,
-        backgroundColor: 'lightblue',
+        backgroundColor: backgroundColor,
         margin: 0,
         padding: 0,
       }}>
       {children}
     </div>
-    {showContextMenu && <ItemContextMenu menuX={contextMenuPosition.x} menuY={contextMenuPosition.y} />}
+    {showContextMenu && <ContextMenu menuX={contextMenuPosition.x} menuY={contextMenuPosition.y}>
+      <button onClick={() => setBackgroundColor("crimson")}>Red</button>
+      <button onClick={() => setBackgroundColor("springgreen")}>Green</button>
+      <button onClick={() => setBackgroundColor("lightblue")}>Blue</button>
+    </ContextMenu>}
   </>
 }
 
