@@ -1,8 +1,18 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
-const ItemContextMenu: React.FC = () => {
+type ItemContextMenuProps = {
+  menuX?: number;
+  menuY?: number;
+}
+
+const ItemContextMenu: React.FC<ItemContextMenuProps> = ({ menuX = 0, menuY = 0 }) => {
   return (
-    <div>
+    <div style={{
+      position: 'absolute',
+      left: menuX,
+      top: menuY,
+      backgroundColor: 'lightgreen',
+    }}>
       This is ItemContextMenu.
     </div>
   )
@@ -19,10 +29,12 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
   const [position, setPosition] = useState({ x, y })
   const [isMove, setIsMove] = useState(false)
   const [showContextMenu, setShowContextMenu] = useState(false)
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsMove(true)
     setPrevClientPosition({ x: e.clientX, y: e.clientY })
+    setContextMenuPosition({ x: e.clientX, y: e.clientY })
   }
 
   useEffect(() => {
@@ -45,32 +57,40 @@ const Item: React.FC<ItemProps> = ({ x = 0, y = 0, children }) => {
       setIsMove(false)
     }
 
+    const handleWindowClick = (e: MouseEvent) => {
+      setShowContextMenu(false)
+    }
+
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
     document.addEventListener('mouseleave', handleMouseLeave)
+    window.addEventListener('click', handleWindowClick)
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
       document.removeEventListener('mouseleave', handleMouseLeave)
+      window.removeEventListener('click', handleWindowClick)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMove, position])
 
-  return <div
-    onMouseDown={onMouseDown}
-    onContextMenu={(e) => { e.preventDefault(); setShowContextMenu(true) }}
-    style={{
-      position: 'absolute',
-      left: position.x,
-      top: position.y,
-      backgroundColor: 'lightblue',
-      margin: 0,
-      padding: 0,
-    }}>
-    {children}
-    {showContextMenu && <ItemContextMenu />}
-  </div>
+  return <>
+    <div
+      onMouseDown={onMouseDown}
+      onContextMenu={(e) => { e.preventDefault(); setShowContextMenu(true) }}
+      style={{
+        position: 'absolute',
+        left: position.x,
+        top: position.y,
+        backgroundColor: 'lightblue',
+        margin: 0,
+        padding: 0,
+      }}>
+      {children}
+    </div>
+    {showContextMenu && <ItemContextMenu menuX={contextMenuPosition.x} menuY={contextMenuPosition.y} />}
+  </>
 }
 
 type CanvasProps = {
