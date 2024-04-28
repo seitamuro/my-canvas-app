@@ -1,4 +1,23 @@
+import { TextareaAutosize as BaseTextareaAutosize } from "@mui/material";
+import { styled } from "@mui/system";
 import React, { useEffect, useState } from "react";
+
+const TextAreaAutoSize = styled(BaseTextareaAutosize)(
+  ({ theme }) => `
+  box-sizing: border-box;
+  width: 320px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 8px;
+  // firefox
+  &:focus-visible {
+    outline: 0;
+  }
+`
+)
 
 type ItemContextMenuProps = {
   menuX?: number;
@@ -135,7 +154,10 @@ export const MouseClickCanvasSample = () => {
   return (
     <Canvas >
       <button onClick={onClick}>Add Item</button>
-      {items.map((item, index) => (<Item key={index} x={item.x} y={item.y}>{item.text}</Item>))}
+      {items.map((item, index) => (<Item key={index} x={item.x} y={item.y}>
+        <p>{item.text}</p>
+        <TextAreaAutoSize />
+      </Item>))}
     </Canvas>
   )
 }
