@@ -5,6 +5,7 @@ import { MouseClickCanvasSample } from "./MouseClickCanvas";
 import { ReactBeautifulDndSample } from "./ReactBeautifulDndSample";
 import { ReactFlowSample } from "./ReactFlowSample";
 import { ReactOnDragSample } from "./ReactOnDragSample";
+import { WebAudioSample } from "./WebAudioSample";
 import { ZodSample } from "./ZodSample";
 
 export const router = createBrowserRouter([
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
   {
     path: "/samples/react-flow",
     element: <ReactFlowSample />
+  },
+  {
+    path: "/samples/web-audio",
+    element: <WebAudioSample />
   }
 ])
