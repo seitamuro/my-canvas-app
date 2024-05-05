@@ -14,6 +14,8 @@ export type Store = {
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (params: Edge | Connection) => void;
   updateNode: (id: string, data: any) => void;
+  isRunning: boolean;
+  toggleAudio: () => void;
 };
 
 export const useStore = create((set: any, get: any) => ({
@@ -25,7 +27,12 @@ export const useStore = create((set: any, get: any) => ({
       type: "osc",
     },
     { id: "b", data: { label: "gain" }, position: { x: 50, y: 50 } },
-    { id: "c", data: { label: "output" }, position: { x: -50, y: 100 } },
+    {
+      id: "c",
+      data: { label: "output" },
+      position: { x: -50, y: 100 },
+      type: "out",
+    },
   ],
   edges: [],
   onNodeChange(changes: NodeChange[]) {
@@ -46,5 +53,9 @@ export const useStore = create((set: any, get: any) => ({
         return node;
       }),
     });
+  },
+  isRunning: false,
+  toggleAudio() {
+    set({ isRunning: !get().isRunning });
   },
 }));
