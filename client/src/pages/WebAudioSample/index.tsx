@@ -1,39 +1,43 @@
-import React from "react";
 
-const context = new AudioContext();
-const osc = context.createOscillator();
-const amp = context.createGain();
+import ReactFlow, { Background, ReactFlowProvider } from "reactflow";
+import "reactflow/dist/style.css";
+import { shallow } from "zustand/shallow";
 
-osc.connect(amp)
-amp.connect(context.destination)
+import { Osc } from "./nodes/Osc";
+import type { Store } from "./store";
+import { useStore } from "./store";
 
-osc.connect(amp)
-amp.connect(context.destination)
-
-osc.start()
-
-const toggleAudio = () => {
-  if (context.state === "suspended") {
-    context.resume()
-  } else {
-    context.suspend()
-  }
+const nodeTypes = {
+  osc: Osc
 }
 
-const updateValues = (e: React.MouseEvent) => {
-  const freq = (e.clientX / window.innerWidth) * 1000
-  const gain = e.clientY / window.innerHeight
+const selector = (store: Store) => ({
+  nodes: store.nodes,
+  edges: store.edges,
+  onNodeChange: store.onNodeChange,
+  onEdgesChange: store.onEdgesChange,
+  onConnect: store.onConnect,
+})
 
-  osc.frequency.value = freq
-  amp.gain.value = gain
-}
+//import "./index.css";
 
 export const WebAudioSample = () => {
+  const store = useStore(selector, shallow)
+
   return (
-    <div
-      style={{ width: "100vw", height: "100vh" }}
-      onMouseMove={updateValues}
-      onClick={toggleAudio}
-    />
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <ReactFlowProvider>
+        <ReactFlow
+          nodes={store.nodes}
+          nodeTypes={nodeTypes}
+          edges={store.edges}
+          onNodesChange={store.onNodeChange}
+          onEdgesChange={store.onEdgesChange}
+          onConnect={store.onConnect}
+        >
+          <Background />
+        </ReactFlow>
+      </ReactFlowProvider>
+    </div>
   )
 }
